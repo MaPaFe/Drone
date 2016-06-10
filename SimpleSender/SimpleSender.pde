@@ -2,6 +2,7 @@ import vsync.*;
 import processing.serial.*;
 
 public int upDown = 0, leftRight = 0, forwardBack = 0, connect = 0;
+boolean connectB = false;
 
 ValueSender sender;
 
@@ -13,19 +14,24 @@ void setup() {
   sender.observe("leftRight");
   sender.observe("forwardBack");
   sender.observe("connect");
+
+  background(51);
+  stroke(255);
+  line(0, height/2, width, height/2);
+  line(width/2, 0, width/2, height);
 }
 
 void draw() {
+  if (connectB) connect = 1;
+  else connect = 0;
   println(upDown, leftRight, forwardBack, connect);
   upDown = constrain(upDown, 0, 255);
   forwardBack = int(map(mouseX, 0, width, 255, 0));
   leftRight =   int(map(mouseY, 0, height, 255, 0));
 }
-hbyc6ddu´ bu jtfr6sw5464bv b uhjyuyh6cv 5t           
 
-  void keyPressed() {
-  if (key == 'w') upDown += 10;
+void keyPressed() {
+  if      (key == 'w') upDown += 10;
   else if (key == 's') upDown -= 10;
-  else if (key == 'c') connect = 1;
-  else if (key == 'v') connect = 0;
+  else if (key == 'c') connectB = !connectB;
 }

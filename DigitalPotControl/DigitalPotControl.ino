@@ -22,28 +22,18 @@ void setup() {
 
 void loop() {
   receiver.sync();
-  if (con = 1) cani();
-  digitalPotWrite(2, upDown);
+  if (con = 1) {
+    digitalPotWrite(2, 0);
+    delay(500);
+    digitalPotWrite(2, 255);
+    delay(500);
+    digitalPotWrite(2, 0);
+    delay(500);
+    digitalPotWrite(2, 255);
+    delay(500);
+  } else digitalPotWrite(2, upDown);
   digitalPotWrite(1, leftRight);
   digitalPotWrite(0, forwardBack);
-
-  //  for (int level = 0; level < 255; level++) {
-  //    digitalPotWrite(2, level);
-  //    delay(10);
-  //  }
-  //  delay(100);
-  //  for (int level = 255; level > 0; level--) {
-  //    digitalPotWrite(2, level);
-  //    delay(10);
-  //  }
-
-  //  digitalPotWrite(2, 0);
-  //  delay(500);
-  //  digitalPotWrite(2, 255);
-  //  delay(500);
-
-  //  digitalPotWrite(2, 255 / 128);
-  //  delay(100);
 }
 
 void digitalPotWrite(int address, int value) {
@@ -51,9 +41,4 @@ void digitalPotWrite(int address, int value) {
   SPI.transfer(address);
   SPI.transfer(value);
   digitalWrite(slaveSelectPin, HIGH);
-}
-
-void cani() {
-  for (int level = 0; level < 255; level++) digitalPotWrite(2, level); delay(10);
-  for (int level = 255; level > 0; level--) digitalPotWrite(2, level); delay(10);
 }
