@@ -1,44 +1,43 @@
-//izquierda 46
-//medio     51
-//derecha   52
-
+// inslude the SPI library:
 #include <SPI.h>
-#include <VSync.h>
 
-ValueReceiver<4> receiver;
-
+// set pin 10 as the slave select for the digital pot:
 const int slaveSelectPin = 46;
-int upDown = 0, leftRight = 0, forwardBack = 0, con = 0;
 
 void setup() {
-  Serial.begin(19200);
-  receiver.observe(upDown);
-  receiver.observe(leftRight);
-  receiver.observe(forwardBack);
-  receiver.observe(con);
+  // set the slaveSelectPin as an output:
   pinMode(slaveSelectPin, OUTPUT);
+  // initialize SPI:
   SPI.begin();
+  Serial.begin(9600);
 }
 
 void loop() {
-  receiver.sync();
-  if (con = 1) {
-    digitalPotWrite(2, 0);
-    delay(500);
-    digitalPotWrite(2, 255);
-    delay(500);
-    digitalPotWrite(2, 0);
-    delay(500);
-    digitalPotWrite(2, 255);
-    delay(500);
-  } else digitalPotWrite(2, upDown);
-  digitalPotWrite(1, leftRight);
-  digitalPotWrite(0, forwardBack);
+  // go through the six channels of the digital pot:
+  for (int channel = 0; channel < 6; channel++) {
+    Serial.println(channel);
+    // change the resistance on this channel from min to max:
+    for (int level = 0; level < 255; level++) {
+      digitalPotWrite(channel, level);
+      delay(10);
+    }
+    // wait a second at the top:
+    delay(100);
+    // change the resistance on this channel from max to min:
+    for (int level = 0; level < 255; level++) {
+      digitalPotWrite(channel, 255 - level);
+      delay(10);
+    }
+  }
+
 }
 
 void digitalPotWrite(int address, int value) {
+  // take the SS pin low to select the chip:
   digitalWrite(slaveSelectPin, LOW);
+  //  send in the address and value via SPI:
   SPI.transfer(address);
   SPI.transfer(value);
+  // take the SS pin high to de-select the chip:
   digitalWrite(slaveSelectPin, HIGH);
 }

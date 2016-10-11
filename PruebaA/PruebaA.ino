@@ -8,7 +8,7 @@ void setup() {
 
 void loop() {
   //marron
-  digiPotWrite(1, 0);
+  digiPotWrite(1, 255);
   //gris
   digiPotWrite(0, 0);
   //azul
