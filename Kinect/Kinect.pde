@@ -4,7 +4,7 @@ Kinect2 kinect;
 
 ArrayList <Blob> blobs;
 
-int threshold = 1000;
+int threshold = 500;
 int[] background;
 PImage display;
 
@@ -17,7 +17,7 @@ void setup() {
   kinect.initDepth();
   kinect.initDevice();
 
-  display    = createImage(kinect.depthWidth, kinect.depthHeight, RGB);
+  display    = createImage(512, 424, RGB);
   background = kinect.getRawDepth();
 }
 

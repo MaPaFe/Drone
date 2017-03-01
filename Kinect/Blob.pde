@@ -48,9 +48,9 @@ void blobs() {
   blobs.clear();
 
   display.loadPixels();
-  for (int x = 0; x < kinect.depthWidth; x++) {
-    for (int y = 0; y < kinect.depthHeight; y++) {
-      int index =  x + y*kinect.depthWidth;
+  for (int x = 100; x < 412; x++) {
+    for (int y = 100; y < 324; y++) {
+      int index =  x + y*512;
       int rawDepth = depth[index];
       int bkgDepth = background[index];
       if (rawDepth > 0 && delta(rawDepth, bkgDepth) > threshold) {
