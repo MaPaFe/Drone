@@ -42,8 +42,8 @@ class Blob {
 }
 
 void blobs() {
-  int[] depth = kinect.getRawDepth();
-  PImage bkg = kinect.getDepthImage();
+  int[] depth = kinect.getDepth();
+  PImage bkg = kinect.getImage();
 
   blobs.clear();
 

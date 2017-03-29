@@ -1,6 +1,6 @@
 import org.openkinect.processing.*;
 
-Kinect2 kinect;
+Knct kinect;
 
 ArrayList <Blob> blobs;
 
@@ -13,12 +13,10 @@ void setup() {
 
   blobs = new ArrayList();
 
-  kinect = new Kinect2(this);
-  kinect.initDepth();
-  kinect.initDevice();
+  kinect = new Knct(this);
 
   display    = createImage(512, 424, RGB);
-  background = kinect.getRawDepth();
+  background = kinect.getDepth();
 }
 
 void draw() {
@@ -33,5 +31,5 @@ void draw() {
 }
 
 void keyPressed() {
-  background = kinect.getRawDepth();
+  background = kinect.getDepth();
 }
