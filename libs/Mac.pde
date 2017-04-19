@@ -1,3 +1,5 @@
+import org.openkinect.processing.*;
+
 class Knct {
   Kinect2 kinect;
 

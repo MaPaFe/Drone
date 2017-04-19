@@ -1,4 +1,4 @@
-*/data.*
+**/data.*
 Windows.pde
 Mac.pde
 !libs/Windows.pde

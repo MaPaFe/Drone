@@ -3,10 +3,11 @@ PrintWriter out;
 
 void setup() {
   size(512, 424, P2D);
+  frameRate(30);
 
   kinect = new Knct(this);
 
-  out = createWriter("../Load/data.txt");
+  out = createWriter("Load/data.txt");
 }
 
 void draw() {
@@ -20,4 +21,4 @@ void draw() {
     out.close();
     exit();
   }
-} //<>//
+}

@@ -3,6 +3,8 @@ int[] frame;
 
 void setup() {
   size(512, 424, P2D);
+  frameRate(30);
+
   reader = createReader("data.txt");
 }
 
