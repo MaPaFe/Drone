@@ -4,9 +4,9 @@ class Knct {
   KinectPV2 kinect;
 
   Knct(PApplet pa) {
-    kinect = new Kinect2(pa);
-    kinect.enableDepthImage(true);
-    kinect.init(true);
+    kinect = new KinectPV2(pa);
+    kinect.enableDepthImg(true);
+    kinect.init();
   }
 
   int[] getDepth() {
