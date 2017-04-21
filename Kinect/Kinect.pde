@@ -1,5 +1,3 @@
-import org.openkinect.processing.*;
-
 Knct kinect;
 
 ArrayList <Blob> blobs;
