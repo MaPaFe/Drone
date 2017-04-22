@@ -5,6 +5,7 @@ import blobDetection.*;
 BufferedReader reader;
 int[] frame;
 PImage buffer;
+int maxA=10000,minA=2900;
 BlobDetection theBlobDetection;
 
 void setup() {
@@ -14,7 +15,7 @@ void setup() {
   reader = createReader("data.txt");
   theBlobDetection = new BlobDetection(width, height);
   theBlobDetection.setPosDiscrimination(true);
-  theBlobDetection.setThreshold(0.4f); // will detect bright areas whose luminosity > 0.2f;
+  theBlobDetection.setThreshold(0.2f); // will detect bright areas whose luminosity > 0.2f;
   buffer = createImage(width, height, RGB);
 }
 void draw() {
@@ -28,7 +29,7 @@ void draw() {
   for (int i = 0; i < frame.length; i++) pixels[i] = color(map(frame[i], 0, 4096, 0, 255));
   //pixels = frame;
   buffer.pixels = pixels;
-  fastblur(buffer, 18);
+  fastblur(buffer, 2);
   theBlobDetection.computeBlobs(buffer.pixels);
   drawBlobsAndEdges(true, true);
   updatePixels();
@@ -47,7 +48,7 @@ void drawBlobsAndEdges(boolean drawBlobs, boolean drawEdges)
   for (int n=0; n<theBlobDetection.getBlobNb(); n++)
   {
     b=theBlobDetection.getBlob(n);
-    if (b!=null && b.w*b.h>1000 && b.w*b.h>300 )
+    if (b!=null && b.w*width*b.h*height<maxA && b.w*width*b.h*height>minA )//filter if to display by size
     {
       // Edges
       if (drawEdges)
