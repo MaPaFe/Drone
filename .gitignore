@@ -1,5 +1,5 @@
 **/data.*
 Windows.pde
 Mac.pde
-!libs/Windows.pde
-!libs/Mac.pde
+!/Processing/libs/Windows.pde
+!/Processing/libs/Mac.pde
