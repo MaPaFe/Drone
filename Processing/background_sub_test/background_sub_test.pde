@@ -5,7 +5,7 @@ int N = 100;// N is the number of preceding images taken for averaging
 int mtreshold = 50;//treshold to be considered movement
 Capture video;
 int[][] b;//[time][pixel] STACK(frames made in the past) + actual information of the frames
-int n = 0;//t active (used to keep track at first buffer loop when the buffer is empty(initializing the stack))
+//int n = 0;//t active (used to keep track at first buffer loop when the buffer is empty(initializing the stack))
 
 void setup() {
   size(640, 480);
@@ -23,7 +23,7 @@ void draw() {
     int index = 0;
     for (int y = 0; y < video.height; y++) {
       for (int x = 0; x < video.width; x++) {
-        if (n<N) b[n][index] = video.pixels[index]; //first loading of the buffer: the b array is loaded with frame at time n 
+        //if (n<N) b[n][index] = video.pixels[index]; //first loading of the buffer: the b array is loaded with frame at time n 
         if (abs(brightness(mean(b, index)) - brightness(video.pixels[index]))< mtreshold) { //brightness tresholding//
           pixels[index] = color(0);
         } else {
@@ -32,7 +32,7 @@ void draw() {
         index++;
       }
     }
-    if (n<=N)n++;
+   // if (n<=N)n++;
     b = push(b, video.pixels);
     updatePixels();
   }
