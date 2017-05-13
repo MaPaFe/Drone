@@ -1,5 +1,7 @@
 **/data.*
 Windows.pde
 Mac.pde
+Offline.pde
 !/Processing/libs/Windows.pde
 !/Processing/libs/Mac.pde
+!/Processind/libs/Offline.pde

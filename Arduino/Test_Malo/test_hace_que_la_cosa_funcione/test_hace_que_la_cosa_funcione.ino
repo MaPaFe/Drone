@@ -21,7 +21,7 @@ void setup() {
 
 void loop() {
   //for (int i = 0; i < 4; i++) {
-  chVal[0] = pulseIn(ch1, HIGH, 20000);
+  chVal[0] = pulseIn(ch1, HIGH);//, 20000);
   //chVal[1] = pulseIn(chPin[1], HIGH);
   //chVal[2] = pulseIn(chPin[2], HIGH);
   //chVal[3] = pulseIn(chPin[3], HIGH);
