@@ -1,8 +1,11 @@
 class Drone {
+  final int AVERAGE_RADIUS = 3;
+  final int MIN_BOX_THRESHOLD = 20;
+  final int MAX_BOX_THRESHOLD = 100;
+  final int BOX_INCREMENT = 10;
+
   boolean foundAtBeginning = false;
   PVector currentDronePos, previousDronePos, predictionObserved;
-
-  int averageRadius = 3;
 
   Drone() {
     currentDronePos = new PVector();
@@ -12,7 +15,7 @@ class Drone {
 
   void update() {
     if (!foundAtBeginning) {
-      currentDronePos = findAtBeginning(2000);
+      currentDronePos = findAtBeginning(FIND_FIRST_THRESHOLD);
 
       if (currentDronePos != null) {
         println("-----------------------");
@@ -29,13 +32,12 @@ class Drone {
 
         currentDronePos = searchDrone(predictionObserved);
 
-        predictionObserved = PVector.add(currentDronePos, PVector.sub(currentDronePos, previousDronePos).mult(1));
+        predictionObserved = PVector.add(currentDronePos, PVector.sub(currentDronePos, previousDronePos));
 
         //if (currentDronePos == null) foundAtBeginning = false;
 
-
         println(predictionObserved, currentDronePos, previousDronePos);
-        line(currentDronePos.x, currentDronePos.y, currentDronePos.x+(previousDronePos.x-currentDronePos.x)*-100, currentDronePos.y+(previousDronePos.y-currentDronePos.y)*-100);
+        line(currentDronePos.x, currentDronePos.y, predictionObserved.x*-100, predictionObserved.y*-100);
         noStroke();
         fill(0, 0, 255);
         ellipse(previousDronePos.x, previousDronePos.y, 8, 8);
@@ -79,8 +81,20 @@ class Drone {
 
     if (blobs.getBlobNb() >= 1) {
       Blob b = blobs.getBlob(0);
-      return new PVector(b.x * kinect.width, b.y * kinect.height, depth[int(b.x + b.y * kinect.width)]);
-    } else return null;
+
+      int averageDepth = 0;
+      for (float y = b.y - AVERAGE_RADIUS; y < b.y + AVERAGE_RADIUS; y++) {
+        for (float x = b.x - AVERAGE_RADIUS; x < b.x + AVERAGE_RADIUS; x++) {
+          averageDepth += depth[int(
+            (x * kinect.width) + (y * kinect.height) * kinect.width
+            )];
+        }
+      }
+      println(averageDepth);
+
+      return new PVector(b.x * kinect.width, b.y * kinect.height, averageDepth);
+    }
+    return null;
   }
 
   PVector searchDrone(PVector prediction) {
@@ -91,7 +105,7 @@ class Drone {
     blobs.setThreshold(0.25);
     blobs.setBlobMaxNumber(1);
 
-    for (int threshold = 20; threshold < 100; threshold += 10) {
+    for (int threshold = MIN_BOX_THRESHOLD; threshold < MAX_BOX_THRESHOLD; threshold += BOX_INCREMENT) {
       PVector boxMin = new PVector(
         max(prediction.x - threshold, 0), 
         max(prediction.y - threshold, 0), 
@@ -127,7 +141,7 @@ class Drone {
 
       blobs.computeBlobs(blobsImage.pixels);
 
-      set(0, 0, kinect.getImage());
+      //set(0, 0, kinect.getImage());
       //set(0, 0, blobsImage);
       drawBlobsAndEdges(blobs, true, false);
 
@@ -135,8 +149,8 @@ class Drone {
         Blob b = blobs.getBlob(0);
 
         int averageDepth = 0;
-        for (float y = b.y - averageRadius; y < b.y + averageRadius; y++) {
-          for (float x = b.x - averageRadius; x < b.x + averageRadius; x++) {
+        for (float y = b.y - AVERAGE_RADIUS; y < b.y + AVERAGE_RADIUS; y++) {
+          for (float x = b.x - AVERAGE_RADIUS; x < b.x + AVERAGE_RADIUS; x++) {
             averageDepth += depth[int(
               (x * kinect.width) + (y * kinect.height) * kinect.width
               )];

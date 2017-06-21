@@ -1,3 +1,5 @@
+final int FIND_FIRST_THRESHOLD = 1000;
+
 Knct kinect;
 Drone drone;
 
@@ -6,7 +8,7 @@ void setup() {
   //frameRate(2);
 
   kinect = new Knct(this);
-  
+
   drone = new Drone();
 }
 
@@ -16,7 +18,7 @@ void draw() {
 
   drone.update();
 
-  //println(currentDronePos);
+  //println(drone.currentDronePos);
 }
 
 void keyPressed() {
