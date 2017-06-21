@@ -2,7 +2,7 @@ import java.util.Arrays;
 import processing.video.*;
 
 Knct kinect;
-int N = 100;// N is the number of preceding images taken for averaging
+int N = 30;// N is the number of preceding images taken for averaging
 int mtreshold = 803;//treshold to be considered movement
 Capture video;
 int[][] b;//[time][pixel] STACK(frames made in the past) + actual information of the frames
@@ -21,10 +21,10 @@ void draw() {
   int index = 0;
   for (int y = 0; y < kinect.height; y++) {     //go throughevery pixel
     for (int x = 0; x < kinect.width; x++) {    //*
-      if (abs(mean(b, index) - kinectDepht[index])< mtreshold) { //depth tresholding//
+      if (abs(mean(b, index) - kinectDepht[index]) < mtreshold) { //depth tresholding//
         pixels[index] = color(255);
       } else {
-        pixels[index] = color(255,0,0);//color((int)map(kinectDepht[index],0,4095,0,255));
+        pixels[index] = color(255, 0, 0);//color((int)map(kinectDepht[index],0,4095,0,255));
       }
       index++;
     }
@@ -56,16 +56,15 @@ int mean(int[][] buf, int index) {///give de average value of pixel index i
 }
 int median(int[][] buf, int index) {
   int[] a = new int[buf.length];
-  for(int i=0;i<buf.length;i++){
+  for (int i=0; i<buf.length; i++) {
     a[i] = buf[i][index];
   }
   Arrays.sort(a);
-  if(a.length%2==0){
+  if (a.length%2==0) {
     return (a[a.length/2]+a[(a.length/2)+1])/2;
-  }else{
+  } else {
     return a[ceil(a.length/2)];
   }
-  
 }
 void keyPressed() {//captures and saves frame width random name and frame
   saveFrame(str(random(100))+"_"+str(frameCount)+".png");
