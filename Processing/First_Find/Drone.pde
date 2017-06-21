@@ -2,6 +2,8 @@ class Drone {
   boolean foundAtBeginning = false;
   PVector currentDronePos, previousDronePos, predictionObserved;
 
+  int averageRadius = 3;
+
   Drone() {
     currentDronePos = new PVector();
     previousDronePos = new PVector();
@@ -90,10 +92,18 @@ class Drone {
     blobs.setBlobMaxNumber(1);
 
     for (int threshold = 20; threshold < 100; threshold += 10) {
-      //PVector boxMin = new PVector(max(prediction.x - threshold, 0), max(prediction.y - threshold, 0), prediction.z - threshold);
-      //PVector boxMax = new PVector(min(prediction.x + threshold, kinect.width), min(prediction.y + threshold, kinect.height), prediction.z + threshold);
-      PVector boxMin = new PVector(max(prediction.x - threshold, 0), max(prediction.y - threshold, 0), 100 - threshold);
-      PVector boxMax = new PVector(min(prediction.x + threshold, kinect.width), min(prediction.y + threshold, kinect.height), 2000 + threshold);
+      PVector boxMin = new PVector(
+        max(prediction.x - threshold, 0), 
+        max(prediction.y - threshold, 0), 
+        prediction.z - threshold
+        );
+      PVector boxMax = new PVector(
+        min(prediction.x + threshold, kinect.width), 
+        min(prediction.y + threshold, kinect.height), 
+        prediction.z + threshold
+        );
+      //PVector boxMin = new PVector(max(prediction.x - threshold, 0), max(prediction.y - threshold, 0), 100 - threshold);
+      //PVector boxMax = new PVector(min(prediction.x + threshold, kinect.width), min(prediction.y + threshold, kinect.height), 2000 + threshold);
 
       stroke(255, 0, 0);
       noFill();
@@ -123,7 +133,18 @@ class Drone {
 
       if (blobs.getBlobNb() >= 1) {
         Blob b = blobs.getBlob(0);
-        return new PVector(b.x * kinect.width, b.y * kinect.height, depth[int(b.x + b.y * kinect.width)]);
+
+        int averageDepth = 0;
+        for (float y = b.y - averageRadius; y < b.y + averageRadius; y++) {
+          for (float x = b.x - averageRadius; x < b.x + averageRadius; x++) {
+            averageDepth += depth[int(
+              (x * kinect.width) + (y * kinect.height) * kinect.width
+              )];
+          }
+        }
+        println(averageDepth);
+
+        return new PVector(b.x * kinect.width, b.y * kinect.height, averageDepth);
       }
     }
     return null;
