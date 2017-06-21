@@ -1,23 +1,24 @@
-import org.openkinect.processing.*; //<>//
+Knct kinect; //<>// //<>// //<>//
+PrintWriter out;
 
-class Knct {
-  Kinect2 kinect;
-  int width, height;
+void setup() {
+  size(512, 424, P2D);
+  frameRate(30);
 
-  Knct(PApplet pa) {
-    kinect = new Kinect2(pa);
-    kinect.initDepth();
-    kinect.initDevice();
-    
-    width = 512;
-    height = 424;
+  kinect = new Knct(this);
+
+  out = createWriter("data.txt");
+}
+
+void draw() {
+  background(0);
+  image(kinect.getImage(), 0, 0);
+
+  if (frameCount > 50) {
+    out.println(join(str(kinect.getDepth()), ","));
   }
-
-  int[] getDepth() {
-    return kinect.getRawDepth();
-  }
-
-  PImage getImage() {
-    return kinect.getDepthImage().copy();
+  if (frameCount >= 550) {
+    out.close();
+    exit();
   }
 }
