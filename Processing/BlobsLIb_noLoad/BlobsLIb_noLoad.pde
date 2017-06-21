@@ -3,7 +3,7 @@ import blobDetection.*;
 Knct kinect;
 BlobDetection blobs;
 
-int threshold = 1000;
+int threshold = 10000;
 
 void setup() {
   size(512, 424, P2D);
@@ -29,7 +29,7 @@ void draw() {
     }
   }
   blobsImage.updatePixels();
-  blobsImage.filter(BLUR, 3);
+  blobsImage.filter(BLUR, 2);
 
   blobs.computeBlobs(blobsImage.pixels);
 
