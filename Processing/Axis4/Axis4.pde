@@ -23,23 +23,22 @@ void setup() {
 }
 
 void draw() {
-  if (connectB) connect = 1;
-  else connect = 0;
+  connect = connectB ? 1 : 0;
   println(upDown, leftRight, forwardBack, connect);
   //upDown = constrain(upDown, 0, 255);
-  forwardBack = int(map(mouseX, 0, width, 255, 0));
-  forwardBack = int(abs(sin(frameCount/100.0))*255);
-  forwardBack = int(255);
+  //forwardBack = int(map(mouseX, 0, width, 255, 0));
+  //forwardBack = int(abs(sin(frameCount/100.0))*255);
+  forwardBack = int(127);
 
-  leftRight =   int(map(mouseY, 0, height, 255, 0));
-  leftRight = int(abs(sin(frameCount/100.0))*255);
+  upDown =   int(map(mouseY, 0, height, 255, 0));
+  //leftRight = int(abs(sin(frameCount/100.0))*255);
   leftRight = int(127);
 
-  upDown = int(255);
+  //upDown = int(255);
 }
 
 void keyPressed() {
-  if (key == 'w') upDown +=5;
-  if (key == 's') upDown -=10;
+  if (key == 'w') upDown += 5;
+  if (key == 's') upDown -= 10;
   if (key == 'c') connectB = !connectB;
 }

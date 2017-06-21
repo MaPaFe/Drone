@@ -14,7 +14,7 @@ void setup() {
 
 void loop() {
   // go through the six channels of the digital pot:
-  for (int channel = 0; channel < 6; channel++) {
+  for (int channel = 3; channel < 4; channel++) {
     Serial.println(channel);
     // change the resistance on this channel from min to max:
     for (int level = 0; level < 255; level++) {

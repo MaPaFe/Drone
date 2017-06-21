@@ -26,14 +26,20 @@ void setup() {
 void loop() {
   receiver.sync();
   if (con == 1) {
-    digitalPotWrite(2, 0);
+    digitalWrite(13, HIGH);
+    digitalPotWrite(3, 0);
     delay(500);
-    digitalPotWrite(2, 255);
+    digitalWrite(13, LOW);
+    digitalPotWrite(3, 255);
     delay(500);
-  } else digitalPotWrite(2, upDown);
+  } else {
+    digitalWrite(13, LOW);
+    digitalPotWrite(3, upDown);
+  }
 
   digitalPotWrite(1, leftRight);
   digitalPotWrite(0, forwardBack);
+  digitalPotWrite(2, 127);
 
   analogWrite(13, map(analogRead(A1), 0, 1023, 0, 255));
 }
