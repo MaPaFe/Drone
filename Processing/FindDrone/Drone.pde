@@ -141,7 +141,7 @@ class Drone {
 
       blobs.computeBlobs(blobsImage.pixels);
 
-      //set(0, 0, kinect.getImage());
+      set(0, 0, kinect.getImage());
       //set(0, 0, blobsImage);
       drawBlobsAndEdges(blobs, true, false);
 
