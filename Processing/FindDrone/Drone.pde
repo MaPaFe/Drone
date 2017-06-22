@@ -1,5 +1,5 @@
 class Drone {
-  final int AVERAGE_RADIUS = 3;
+  final int AVERAGE_RADIUS = 0;
   final int MIN_BOX_THRESHOLD = 20;
   final int MAX_BOX_THRESHOLD = 100;
   final int BOX_INCREMENT = 10;
@@ -83,11 +83,9 @@ class Drone {
       Blob b = blobs.getBlob(0);
 
       int averageDepth = 0;
-      for (float y = b.y - AVERAGE_RADIUS; y < b.y + AVERAGE_RADIUS; y++) {
-        for (float x = b.x - AVERAGE_RADIUS; x < b.x + AVERAGE_RADIUS; x++) {
-          averageDepth += depth[int(
-            (x * kinect.width) + (y * kinect.height) * kinect.width
-            )];
+      for (float y = (b.y * kinect.height) - AVERAGE_RADIUS; y < (b.y * kinect.height) + AVERAGE_RADIUS; y++) {
+        for (float x = (b.x * kinect.width) - AVERAGE_RADIUS; x < (b.x * kinect.width) + AVERAGE_RADIUS; x++) {
+          averageDepth += depth[int(x + y * kinect.width)];
         }
       }
       println(averageDepth);
@@ -149,11 +147,9 @@ class Drone {
         Blob b = blobs.getBlob(0);
 
         int averageDepth = 0;
-        for (float y = b.y - AVERAGE_RADIUS; y < b.y + AVERAGE_RADIUS; y++) {
-          for (float x = b.x - AVERAGE_RADIUS; x < b.x + AVERAGE_RADIUS; x++) {
-            averageDepth += depth[int(
-              (x * kinect.width) + (y * kinect.height) * kinect.width
-              )];
+        for (float y = (b.y * kinect.height) - AVERAGE_RADIUS; y < (b.y * kinect.height) + AVERAGE_RADIUS; y++) {
+          for (float x = (b.x * kinect.width) - AVERAGE_RADIUS; x < (b.x * kinect.width) + AVERAGE_RADIUS; x++) {
+            averageDepth += depth[int(x + y * kinect.width)];
           }
         }
         println(averageDepth);
