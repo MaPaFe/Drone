@@ -11,19 +11,22 @@ class Knct {
   }
 
   int[] getDepth() {
-    try {
-      return int(split(reader.readLine(), ","));
-    } 
-    catch (IOException e) {
-      int[] shit = {};
-      exit();
-      return shit;
-    }
-    catch (NullPointerException e) {
-      int[] shit = {};
-      exit();
-      return shit;
-    }
+      try {
+        return int(split(reader.readLine(), ","));
+      }
+      catch (IOException e) {
+        int[] shit = {};
+        exit();
+        return shit;
+      }
+      catch (NullPointerException e) {
+        int[] shit = {};
+        exit();
+        return shit;
+      }
+    //int[] shit = new int[width*height];
+    //java.util.Arrays.fill(shit, 2000);
+    //      return shit;
   }
 
   PImage getImage() {
