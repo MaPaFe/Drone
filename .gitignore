@@ -1,4 +1,5 @@
 **/data.*
+*.png
 Windows.pde
 Mac.pde
 Offline.pde
