@@ -1,20 +1,28 @@
 Knct kinect;
 int[] data;//2168 2153 15
 int max=0, min=8000;
+int firstm = 0;
 
 void setup() {
   size(512, 424);
   kinect = new Knct(this);
-  data = new int[15];
+  data = new int[20];
   java.util.Arrays.fill(data, 0);
+  int[] i = kinect.getDepth();
+  while(i[100000]==0){
+   i = kinect.getDepth();
+  }
+  firstm=i[100000];
+  println(firstm);
 }
 
 void draw() {
   int[] i = kinect.getDepth();
   image(kinect.getImage(), 0, 0);
   if (i[100000]!=0) {
-    int index = floor(map(i[100000], 2168, 2153, 0, 14));
-    data[index]+=1;
+    int index = floor(map(i[100000], firstm-10, firstm+10, 0, 20));
+    println(index);
+    data[index]++;
     //int current = i[100000];
     //  if (current>max) {
     //  max=current;
@@ -28,6 +36,7 @@ void draw() {
 }
 void keyPressed() {
   println(max, min, max-min);
+ if(key==' ')saveFrame(str(millis())+"noise"+".png");
 }
 void paint(int[] d) {
   stroke(0, 255, 0);
