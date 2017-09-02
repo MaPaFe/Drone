@@ -1,0 +1,197 @@
+<?xml version="1.0" standalone="yes"?>
+<CalibrationProject>
+  <xs:schema id="CalibrationProject" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xs:element name="CalibrationProject" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+      <xs:complexType>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+          <xs:element name="data">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="ObjWidth" type="xs:int" minOccurs="0" />
+                <xs:element name="ObjHeight" type="xs:int" minOccurs="0" />
+                <xs:element name="FieldSize" type="xs:double" minOccurs="0" />
+                <xs:element name="DetectionMethod" type="xs:int" minOccurs="0" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="images">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="ImagePath" type="xs:string" minOccurs="0" />
+                <xs:element name="SourceType" type="xs:int" minOccurs="0" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="results">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="ImageCount" type="xs:int" minOccurs="0" />
+                <xs:element name="focus_lenX" type="xs:double" minOccurs="0" />
+                <xs:element name="focus_lenY" type="xs:double" minOccurs="0" />
+                <xs:element name="PrincipalX" type="xs:double" minOccurs="0" />
+                <xs:element name="PrincipalY" type="xs:double" minOccurs="0" />
+                <xs:element name="Dist1" type="xs:double" minOccurs="0" />
+                <xs:element name="Dist2" type="xs:double" minOccurs="0" />
+                <xs:element name="Dist3" type="xs:double" minOccurs="0" />
+                <xs:element name="Dist4" type="xs:double" minOccurs="0" />
+                <xs:element name="focus_lenX_er" type="xs:double" minOccurs="0" />
+                <xs:element name="focus_lenY_er" type="xs:double" minOccurs="0" />
+                <xs:element name="PrincipalX_er" type="xs:double" minOccurs="0" />
+                <xs:element name="PrincipalY_er" type="xs:double" minOccurs="0" />
+                <xs:element name="Dist1_er" type="xs:double" minOccurs="0" />
+                <xs:element name="Dist2_er" type="xs:double" minOccurs="0" />
+                <xs:element name="Dist3_er" type="xs:double" minOccurs="0" />
+                <xs:element name="Dist4_er" type="xs:double" minOccurs="0" />
+                <xs:element name="dc_AllImage_errX" type="xs:double" minOccurs="0" />
+                <xs:element name="dc_AllImage_errY" type="xs:double" minOccurs="0" />
+                <xs:element name="Calib_Date" type="xs:string" minOccurs="0" />
+                <xs:element name="Calib_Type" type="xs:int" minOccurs="0" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:complexType>
+    </xs:element>
+  </xs:schema>
+  <data>
+    <ObjWidth>4</ObjWidth>
+    <ObjHeight>5</ObjHeight>
+    <FieldSize>35</FieldSize>
+    <DetectionMethod>3</DetectionMethod>
+  </data>
+  <data>
+    <ObjWidth>5</ObjWidth>
+    <ObjHeight>6</ObjHeight>
+    <FieldSize>31</FieldSize>
+    <DetectionMethod>3</DetectionMethod>
+  </data>
+  <data>
+    <ObjWidth>6</ObjWidth>
+    <ObjHeight>7</ObjHeight>
+    <FieldSize>26</FieldSize>
+    <DetectionMethod>3</DetectionMethod>
+  </data>
+  <images>
+    <ImagePath>C:\Users\Pablo Fernández\Pictures\kinect\JPEG\KinectScreenshot-Infrared-04-19-19.jpg</ImagePath>
+    <SourceType>0</SourceType>
+  </images>
+  <images>
+    <ImagePath>C:\Users\Pablo Fernández\Pictures\kinect\JPEG\KinectScreenshot-Infrared-04-19-57.jpg</ImagePath>
+    <SourceType>0</SourceType>
+  </images>
+  <images>
+    <ImagePath>C:\Users\Pablo Fernández\Pictures\kinect\JPEG\KinectScreenshot-Infrared-04-20-01.jpg</ImagePath>
+    <SourceType>0</SourceType>
+  </images>
+  <images>
+    <ImagePath>C:\Users\Pablo Fernández\Pictures\kinect\JPEG\KinectScreenshot-Infrared-04-20-09.jpg</ImagePath>
+    <SourceType>0</SourceType>
+  </images>
+  <images>
+    <ImagePath>C:\Users\Pablo Fernández\Pictures\kinect\JPEG\KinectScreenshot-Infrared-04-20-22.jpg</ImagePath>
+    <SourceType>0</SourceType>
+  </images>
+  <images>
+    <ImagePath>C:\Users\Pablo Fernández\Pictures\kinect\JPEG\KinectScreenshot-Infrared-04-20-28.jpg</ImagePath>
+    <SourceType>0</SourceType>
+  </images>
+  <images>
+    <ImagePath>C:\Users\Pablo Fernández\Pictures\kinect\JPEG\KinectScreenshot-Infrared-04-20-34.jpg</ImagePath>
+    <SourceType>0</SourceType>
+  </images>
+  <images>
+    <ImagePath>C:\Users\Pablo Fernández\Pictures\kinect\JPEG\KinectScreenshot-Infrared-04-20-41.jpg</ImagePath>
+    <SourceType>0</SourceType>
+  </images>
+  <images>
+    <ImagePath>C:\Users\Pablo Fernández\Pictures\kinect\JPEG\KinectScreenshot-Infrared-04-20-48.jpg</ImagePath>
+    <SourceType>0</SourceType>
+  </images>
+  <images>
+    <ImagePath>C:\Users\Pablo Fernández\Pictures\kinect\JPEG\KinectScreenshot-Infrared-04-21-16.jpg</ImagePath>
+    <SourceType>0</SourceType>
+  </images>
+  <images>
+    <ImagePath>C:\Users\Pablo Fernández\Pictures\kinect\JPEG\KinectScreenshot-Infrared-04-21-26.jpg</ImagePath>
+    <SourceType>0</SourceType>
+  </images>
+  <images>
+    <ImagePath>C:\Users\Pablo Fernández\Pictures\kinect\JPEG\KinectScreenshot-Infrared-04-21-33.jpg</ImagePath>
+    <SourceType>0</SourceType>
+  </images>
+  <images>
+    <ImagePath>C:\Users\Pablo Fernández\Pictures\kinect\JPEG\KinectScreenshot-Infrared-04-21-39.jpg</ImagePath>
+    <SourceType>0</SourceType>
+  </images>
+  <images>
+    <ImagePath>C:\Users\Pablo Fernández\Pictures\kinect\JPEG\KinectScreenshot-Infrared-04-21-50.jpg</ImagePath>
+    <SourceType>0</SourceType>
+  </images>
+  <images>
+    <ImagePath>C:\Users\Pablo Fernández\Pictures\kinect\JPEG\KinectScreenshot-Infrared-04-21-56.jpg</ImagePath>
+    <SourceType>0</SourceType>
+  </images>
+  <images>
+    <ImagePath>C:\Users\Pablo Fernández\Pictures\kinect\JPEG\KinectScreenshot-Infrared-04-22-03.jpg</ImagePath>
+    <SourceType>0</SourceType>
+  </images>
+  <images>
+    <ImagePath>C:\Users\Pablo Fernández\Pictures\kinect\JPEG\KinectScreenshot-Infrared-04-22-07.jpg</ImagePath>
+    <SourceType>0</SourceType>
+  </images>
+  <images>
+    <ImagePath>C:\Users\Pablo Fernández\Pictures\kinect\JPEG\KinectScreenshot-Infrared-04-22-23.jpg</ImagePath>
+    <SourceType>0</SourceType>
+  </images>
+  <images>
+    <ImagePath>C:\Users\Pablo Fernández\Pictures\kinect\JPEG\KinectScreenshot-Infrared-04-22-28.jpg</ImagePath>
+    <SourceType>0</SourceType>
+  </images>
+  <images>
+    <ImagePath>C:\Users\Pablo Fernández\Pictures\kinect\JPEG\KinectScreenshot-Infrared-04-22-44.jpg</ImagePath>
+    <SourceType>0</SourceType>
+  </images>
+  <images>
+    <ImagePath>C:\Users\Pablo Fernández\Pictures\kinect\JPEG\KinectScreenshot-Infrared-04-22-51.jpg</ImagePath>
+    <SourceType>0</SourceType>
+  </images>
+  <images>
+    <ImagePath>C:\Users\Pablo Fernández\Pictures\kinect\JPEG\KinectScreenshot-Infrared-04-22-58.jpg</ImagePath>
+    <SourceType>0</SourceType>
+  </images>
+  <images>
+    <ImagePath>C:\Users\Pablo Fernández\Pictures\kinect\JPEG\KinectScreenshot-Infrared-04-23-03.jpg</ImagePath>
+    <SourceType>0</SourceType>
+  </images>
+  <images>
+    <ImagePath>C:\Users\Pablo Fernández\Pictures\kinect\JPEG\KinectScreenshot-Infrared-04-23-07.jpg</ImagePath>
+    <SourceType>0</SourceType>
+  </images>
+  <images>
+    <ImagePath>C:\Users\Pablo Fernández\Pictures\kinect\JPEG\KinectScreenshot-Infrared-04-23-11.jpg</ImagePath>
+    <SourceType>0</SourceType>
+  </images>
+  <results>
+    <ImageCount>25</ImageCount>
+    <focus_lenX>364.18137450364918</focus_lenX>
+    <focus_lenY>364.33466013379564</focus_lenY>
+    <PrincipalX>253.47401356595424</PrincipalX>
+    <PrincipalY>206.54391867540971</PrincipalY>
+    <Dist1>0.0987069724208411</Dist1>
+    <Dist2>-0.23909737757852678</Dist2>
+    <Dist3>0.00043300172204724168</Dist3>
+    <Dist4>-0.0011233630875520637</Dist4>
+    <focus_lenX_er>0.32823359966278076</focus_lenX_er>
+    <focus_lenY_er>0.29852175712585449</focus_lenY_er>
+    <PrincipalX_er>0.40523937344551086</PrincipalX_er>
+    <PrincipalY_er>0.502318263053894</PrincipalY_er>
+    <Dist1_er>0.0060363132506608963</Dist1_er>
+    <Dist2_er>0.042445439845323563</Dist2_er>
+    <Dist3_er>0.00053868070244789124</Dist3_er>
+    <Dist4_er>0.00043766171438619494</Dist4_er>
+    <dc_AllImage_errX>0.14134159575580302</dc_AllImage_errX>
+    <dc_AllImage_errY>0.11443717124590036</dc_AllImage_errY>
+    <Calib_Date>02/09/2017 16:30:48</Calib_Date>
+    <Calib_Type>2</Calib_Type>
+  </results>
+</CalibrationProject>
