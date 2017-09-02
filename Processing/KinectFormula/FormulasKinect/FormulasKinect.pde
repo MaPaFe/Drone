@@ -5,8 +5,8 @@ void draw() {
 }
 //https://threeconstants.wordpress.com/2014/11/21/kinect-point-cloud-normals-rendering-part-1/
 PVector KinectToReal(PVector kinect) {
-  float focalx = 391.096;
-  float focaly = 463.098;
+  float focalx = 364.18;
+  float focaly = 364.33;
   float principelx = kinect.width/2;
   float principely = kinect.height/2;
   float x = (kinect.x-principelx)*kinect.z/focalx;
@@ -16,8 +16,8 @@ PVector KinectToReal(PVector kinect) {
   return kinect;
 }
 PVector RealToKinect(PVector real) {
-  float focalx = 391.096;
-  float focaly = 463.098;
+  float focalx = 364.18;
+  float focaly = 364.33;
   float principelx = kinect.width/2;
   float principely = kinect.height/2;
   float x = (real.x*focalx/real.z)+principelx;

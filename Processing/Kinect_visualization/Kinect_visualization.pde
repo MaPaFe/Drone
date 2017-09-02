@@ -60,8 +60,8 @@ void draw() {
 
 //https://threeconstants.wordpress.com/2014/11/21/kinect-point-cloud-normals-rendering-part-1/
 float[] KinectToReal(float px, float py, float pz) {
-  float focalx = 391.096;
-  float focaly = 463.098;
+  float focalx = 364.18;
+  float focaly = 364.33;
   float principelx = kinect.width/2;
   float principely = kinect.height/2;
   float x = (px-principelx)*pz/focalx;
@@ -72,8 +72,8 @@ float[] KinectToReal(float px, float py, float pz) {
   return realPoint;
 }
 float[] RealToKinect(float px, float py, float pz) {
-  float focalx = 391.096;
-  float focaly = 463.098;
+  float focalx = 364.33;
+  float focaly = 364.33;
   float principelx = kinect.width/2;
   float principely = kinect.height/2;
   float x = (px*focalx/pz)+principelx;
