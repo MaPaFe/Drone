@@ -2,14 +2,13 @@ import KinectPV2.*;
 
 class Knct {
   KinectPV2 kinect;
-  int width, height;
+  static int width = 512;
+  static int height = 424;
 
   Knct(PApplet pa) {
     kinect = new KinectPV2(pa);
     kinect.enableDepthImg(true);
     kinect.init();
-    width = 512;
-    height = 424;
   }
 
   int[] getDepth() {

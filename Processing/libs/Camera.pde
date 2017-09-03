@@ -1,13 +1,12 @@
 import processing.video.*;
 class Knct {
   Capture video;
-  int width, height;
+  static int width = 512;
+  static int height = 424;
 
   Knct(PApplet pa) {
     video = new Capture(pa, 640, 480);
     video.start();
-    width = 512;
-    height = 424;
   }
 
   int[] getDepth() {

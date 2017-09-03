@@ -2,15 +2,13 @@ import org.openkinect.processing.*;
 
 class Knct {
   Kinect2 kinect;
-  int width, height;
+  static int width = 512;
+  static int height = 424;
 
   Knct(PApplet pa) {
     kinect = new Kinect2(pa);
     kinect.initDepth();
     kinect.initDevice();
-    
-    width = 512;
-    height = 424;
   }
 
   int[] getDepth() {

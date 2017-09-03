@@ -1,13 +1,11 @@
 class Knct {
   BufferedReader reader;
-  int width, height;
+  static int width = 512;
+  static int height = 424;
 
   Knct(PApplet pa) {
     frameRate(30);
     reader = createReader("data.txt");
-
-    width = 512;
-    height = 424;
   }
 
   int[] getDepth() {
