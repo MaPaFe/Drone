@@ -11,7 +11,6 @@ float h = tan(70/2)*zmax*2/4500*SCALE_DEFINED_WIDTH_Z_SIZE;
 int res = 4;
 int[] depth;
 void setup() {
-  //size(640, 480, P3D);
   fullScreen(P3D);
   colorMode(HSB);
   strokeWeight(4);
@@ -21,7 +20,7 @@ void setup() {
   cam.setMaximumDistance(5000);
 }
 void draw() {
-  //println(frameRate);///////////////////////////////centrar para blobs
+  translate(0,0,200);
   rotateX(PI);
   rotateZ(PI);
   background(0);
@@ -30,7 +29,7 @@ void draw() {
   knct_box(w, -h, SCALE_DEFINED_WIDTH_Z_SIZE);
   //int med=0;
   //int count=0;
-  res = keyPressed?1:4;
+  //res = keyPressed?1:4;
   if(res==1) strokeWeight(1);
   else strokeWeight(4);;
   depth = kinect.getDepth();//if(frameCount<194)
