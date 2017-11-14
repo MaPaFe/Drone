@@ -6,19 +6,26 @@ class Drone {
   PVector currentDronePos, previousDronePos, predictionObserved;
   boolean foundAtBeginning;
 
+  Knct kinect;
   PID[] pids;
 
-  Drone() {
+  Drone(PApplet pa) {
     currentDronePos = new PVector();
     previousDronePos = new PVector();
     predictionObserved = new PVector();
 
     foundAtBeginning = false;
 
+    kinect = new Knct(pa);
+
     pids = new PID[3];
-    pids[0] = new PID(-1, 0, -10);
-    pids[1] = new PID(-1, 0, -10);
-    pids[2] = new PID(-1, 0, -10);
+    //pids[0] = new PID(-0.85, 0.5, 0); // throttle
+    //pids[1] = new PID(0.7, 0, 0);    // alante atras
+    //pids[2] = new PID(0.7, 0, 0);    // izq der
+    pids[0] = new PID(pidXP, pidXI, pidXD); // throttle
+    pids[0].setMinMaxOut(50, 127);
+    pids[1] = new PID(pidYP, pidYI, pidYD);    // alante atras
+    pids[2] = new PID(pidZP, pidZI, pidZD);    // izq der
   }
 
   void update(PVector setPoint) {
@@ -35,10 +42,17 @@ class Drone {
       try {
         previousDronePos = currentDronePos.copy();
 
+        // For future prediction with PID
         // PVector prediction = PVector.add(predObserved, predIdeal);
         // prediction.mult(0.5);
 
         currentDronePos = searchDrone(predictionObserved);
+
+        if (GRAPHS) {        
+          for (int i = 0; i < history.length; i++) {
+            history[i][frameCount % history[i].length] = Knct.realToKinect(currentDronePos).array()[i];
+          }
+        }
 
         predictionObserved = PVector.add(currentDronePos, PVector.sub(currentDronePos, previousDronePos));
 
@@ -46,7 +60,7 @@ class Drone {
           byte[] vals = new byte[4];
 
           vals[0] = (byte) pids[0].compute(currentDronePos.y, setPoint.y);
-          vals[1] = 0;//(byte) pids[1].compute(currentDronePos.z, setPoint.z);
+          vals[1] = (byte) pids[1].compute(currentDronePos.z, setPoint.z);
           vals[2] = (byte) pids[2].compute(currentDronePos.x, setPoint.x);
           vals[3] = 0;
 
@@ -55,15 +69,16 @@ class Drone {
           printArray(vals);
         }
 
-        //println(predictionObserved, currentDronePos, previousDronePos);
-        //line(currentDronePos.x, currentDronePos.y, predictionObserved.x * -100, predictionObserved.y * -100);
-        //noStroke();
-        //fill(0, 0, 255);
-        //ellipse(previousDronePos.x, previousDronePos.y, 8, 8);
-        //fill(0, 255, 0);
-        //ellipse(currentDronePos.x, currentDronePos.y, 8, 8);
-        //fill(255, 0, 0);
-        //ellipse(predictionObserved.x, predictionObserved.y, 8, 8);
+        // For visualizing the prediction
+        // println(predictionObserved, currentDronePos, previousDronePos);
+        // line(currentDronePos.x, currentDronePos.y, predictionObserved.x * -100, predictionObserved.y * -100);
+        // noStroke();
+        // fill(0, 0, 255);
+        // ellipse(previousDronePos.x, previousDronePos.y, 8, 8);
+        // fill(0, 255, 0);
+        // ellipse(currentDronePos.x, currentDronePos.y, 8, 8);
+        // fill(255, 0, 0);
+        // ellipse(predictionObserved.x, predictionObserved.y, 8, 8);
       }
       catch (NullPointerException e) {
         foundAtBeginning = false;
@@ -73,9 +88,9 @@ class Drone {
 
   PVector findAtBeginning(int threshold) {
     int[] depth = kinect.getDepth();
-    PImage blobsImage = createImage(kinect.width, kinect.height, RGB);
+    PImage blobsImage = createImage(Knct.width, Knct.height, RGB);
 
-    BlobDetection blobs = new BlobDetection(kinect.width, kinect.height);
+    BlobDetection blobs = new BlobDetection(Knct.width, Knct.height);
     blobs.setThreshold(0.25);
     blobs.setBlobMaxNumber(1);
 
@@ -105,37 +120,39 @@ class Drone {
 
     if (blobs.getBlobNb() >= 1) {
       Blob b = blobs.getBlob(0);
-      return new PVector(b.x * kinect.width, b.y * kinect.height, averageDepth);
+      return Knct.kinectToReal(new PVector(b.x * Knct.width, b.y * Knct.height, averageDepth));
     }
     return null;
   }
 
   PVector searchDrone(PVector prediction) {
+    prediction = Knct.realToKinect(prediction);
     int[] depth = kinect.getDepth();
-    PImage blobsImage = createImage(kinect.width, kinect.height, RGB);
+    PImage blobsImage = createImage(Knct.width, Knct.height, RGB);
 
     BlobDetection blobs = new BlobDetection(blobsImage.width, blobsImage.height);
     blobs.setThreshold(0.25);
     blobs.setBlobMaxNumber(1);
 
     for (int threshold = MIN_BOX_THRESHOLD; threshold < MAX_BOX_THRESHOLD; threshold += BOX_INCREMENT) {
-      //PVector boxMin = new PVector(
-      //  max(prediction.x - threshold, 0), 
-      //  max(prediction.y - threshold, 0), 
-      //  prediction.z - threshold
-      //  // max(prediction.z - threshold, 0)
-      //  );
-      //PVector boxMax = new PVector(
-      //  min(prediction.x + threshold, kinect.width), 
-      //  min(prediction.y + threshold, kinect.height), 
-      //  prediction.z + threshold
-      //  // min(prediction.z + threshold, 7000)
-      //  );
+      PVector boxMin = new PVector(
+        max(prediction.x - threshold, 0), 
+        max(prediction.y - threshold, 0), 
+        prediction.z - threshold
+        // max(prediction.z - threshold, 0)
+        );
+      PVector boxMax = new PVector(
+        min(prediction.x + threshold, Knct.width), 
+        min(prediction.y + threshold, Knct.height), 
+        prediction.z + threshold
+        // min(prediction.z + threshold, 7000)
+        );
 
-      PVector boxMin = new PVector(max(prediction.x - threshold, 0), max(prediction.y - threshold, 0), FIND_FIRST_THRESHOLD - threshold);
-      PVector boxMax = new PVector(min(prediction.x + threshold, kinect.width), min(prediction.y + threshold, kinect.height), FIND_FIRST_THRESHOLD + threshold);
+      //PVector boxMin = new PVector(max(prediction.x - threshold, 0), max(prediction.y - threshold, 0), FIND_FIRST_THRESHOLD - threshold);
+      //PVector boxMax = new PVector(min(prediction.x + threshold, Knct.width), min(prediction.y + threshold, Knct.height), FIND_FIRST_THRESHOLD + threshold);
 
       stroke(255, 0, 0);
+      strokeWeight(4);
       noFill();
       //rect(boxMin.x, boxMin.y, boxMax.x, boxMax.y);
 
@@ -170,7 +187,7 @@ class Drone {
       if (blobs.getBlobNb() >= 1) {
         Blob b = blobs.getBlob(0);
 
-        return new PVector(b.x * kinect.width, b.y * kinect.height, averageDepth);
+        return Knct.kinectToReal(new PVector(b.x * Knct.width, b.y * Knct.height, averageDepth));
       }
     }
     return null;

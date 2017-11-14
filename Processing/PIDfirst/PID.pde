@@ -5,10 +5,8 @@ class PID {
   float lastTime;
 
   PID(float kP_, float kI_, float kD_) {
-    kP = kP_;
-    kI = kI_;
-    kD = kD_;
-
+    setKs(kP_, kI_, kD_);
+    
     minOutput = -127;
     maxOutput = 127;
 
@@ -16,6 +14,12 @@ class PID {
     integral = 0;
 
     lastTime = millis();
+  }
+
+  void setKs(float kP_, float kI_, float kD_) {
+    kP = kP_;
+    kI = kI_;
+    kD = kD_;
   }
 
   void setMinMaxOut(float min, float max) {
@@ -30,8 +34,9 @@ class PID {
     float error = setPoint - input;
 
     integral += error * kI;
+    //integral = constrain(integral, ?, ?);
 
-    float output = error * kP + integral + kI + ((error - prevError) / deltaTime) * kD;
+    float output = error * kP + integral * kI + ((error - prevError) / deltaTime) * kD;
 
     prevError = error;
     lastTime = now;
