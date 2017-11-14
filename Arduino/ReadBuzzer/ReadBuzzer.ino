@@ -4,55 +4,54 @@ const int slaveSelectPin = 46;
 const int buzzerPin = A0;
 
 int buzzer = 0;
-const int beeps = 2;
-
+int beeps = 0;
 bool on = false;
 
+bool connected = false;
+
 void setup() {
+  Serial.begin(9600);
+
+  pinMode(slaveSelectPin, OUTPUT);
   pinMode(buzzerPin, INPUT);
 
-  Serial.begin(9600);
-  Serial.println("EPAHA");
+  SPI.begin();
 }
 
 void loop() {
   buzzer = analogRead(buzzerPin);
+  Serial.println(String(beeps) + " | " + String(buzzer));
 
   if (buzzer > 400) on = true;
-  Serial.println("EPAHA");
 
-  if (on && buzzer == 0 && beeps < 2) {
-    //beeps++;
-    Serial.println("UP");
-    Serial.println(beeps);
-    delay(beeps * 1000);
-    Serial.println("OK");
-  }
-  Serial.println("EPAHA");
-
-  if (beeps == 2)   {
-    Serial.println("EPAHA");
-
-    digitalPotWrite(0, 255);
-    Serial.println("EPAHA");
-
-    Serial.println("2 .");
-    delay(1000);
-    //beeps++;
-  }
-  Serial.println("EPAHA");
-
-  if (beeps == 3)  {
-    digitalPotWrite(0, 0);
-    Serial.println("3 .");
-    delay(1000);
-    //beeps++;
+  if (buzzer == 0 && on) {
+    Serial.println("piiiiiiipp");
+    switch (beeps) {
+      case 0:
+        Serial.println("0");
+        digitalPotWrite(0, 0);
+        delay(1000);
+        break;
+      case 1:
+        Serial.println("1");
+        delay(2000);
+        digitalPotWrite(0, 255);
+        break;
+      case 2:
+        Serial.println("2");
+        delay(1000);
+        digitalPotWrite(0, 0);
+        break;
+      case 3:
+        Serial.println("3");
+        delay(1000);
+        connected = true;
+    }
+    beeps++;
+    delay(100);
   }
 
-  Serial.println("EPAHA");
-
-
-  Serial.println(beeps);
+  if (connected) digitalPotWrite(0, 127);
 }
 
 void digitalPotWrite(int address, int value) {
