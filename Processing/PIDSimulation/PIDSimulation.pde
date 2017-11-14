@@ -14,8 +14,8 @@ void draw() {
 
   PVector wind = new PVector(noise(frameCount/100f), 0);
   PVector gravity = new PVector(0, 0.1);
-  m.applyForce(wind);
-  m.applyForce(gravity);
+  //m.applyForce(wind);
+  //m.applyForce(gravity);
 
   m.update();
   m.display();
