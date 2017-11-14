@@ -3,7 +3,7 @@ Knct kinect;
 int[][] data;//stores[pixel(index)][different measurments for sigma measurment]
 float[] sigma;//stores[pixel(index)->sigma]
 int max=0, min=4000;//minimum and maximum posibble values for measurment (used for mapping) 
-final int MEASUREMENTS=40;
+final int MEASUREMENTS=100;
 
 void setup() {
   size(512, 424);
@@ -26,8 +26,8 @@ void draw() {
   //update sigma
   for (int i = 0; i<data.length; i++) {
     sigma[i]=sigma(data[i]);
-    if (frameCount==40) {
-      printArray(data[i]);
+    if (frameCount==MEASUREMENTS) {
+      //printArray(data[i]);
       noLoop();
     }
   }
@@ -39,6 +39,7 @@ void draw() {
   }//&&i==width*mouseY+mouseX
   updatePixels();
   surface.setTitle(String.format(getClass().getName()+ "  [fps %6.2f]   [frame %d]   [size %d/%d]", frameRate, frameCount, width, height));
+  saveFrame("data/###.jpg");
 }
 float sigma(int[] data) {
   float average = 0;

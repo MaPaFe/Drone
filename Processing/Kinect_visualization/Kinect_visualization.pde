@@ -8,18 +8,19 @@ PeasyCam cam;
 final int SCALE_DEFINED_WIDTH_Z_SIZE = 400;
 float w = tan(70/2)*zmax*2/4500*SCALE_DEFINED_WIDTH_Z_SIZE;
 float h = tan(70/2)*zmax*2/4500*SCALE_DEFINED_WIDTH_Z_SIZE;
-int res = 4;
+int res = 2;
 int[] depth;
+
 void setup() {
   //size(640, 480, P3D);
   fullScreen(P3D);
   colorMode(HSB);
-  strokeWeight(4);
   kinect = new Knct(this);
   cam = new PeasyCam(this, 100);
   cam.setMinimumDistance(0);
   cam.setMaximumDistance(5000);
 }
+
 void draw() {
   //println(frameRate);///////////////////////////////centrar para blobs
   rotateX(PI);
@@ -30,9 +31,8 @@ void draw() {
   knct_box(w, -h, SCALE_DEFINED_WIDTH_Z_SIZE);
   //int med=0;
   //int count=0;
-  res = keyPressed?1:4;
-  if(res==1) strokeWeight(1);
-  else strokeWeight(4);;
+  res = keyPressed?1:2;
+  strokeWeight(res);
   depth = kinect.getDepth();//if(frameCount<194)
   for (int x=0; x<kinect.width; x+=res) {
     for (int y=0; y<kinect.height; y+=res) {
