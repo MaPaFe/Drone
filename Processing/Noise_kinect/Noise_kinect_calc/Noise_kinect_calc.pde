@@ -1,8 +1,8 @@
 Knct kinect;
 int[] data;//stores the amount values [deviation +10] 
 int index;
-final int OFFSET = 10;
-final int frames_for_average_calculation=60;
+final int OFFSET = 50;
+final int frames_for_average_calculation = 60;
 int[] averages = new int[frames_for_average_calculation];
 float average = 0f;
 float max_deviation = 0;
@@ -32,6 +32,7 @@ void draw() {
     println("max_deviation: ", max_deviation);
     //intialice data array:
     data = new int[round(max_deviation)*2+1];//size of data is dependent of maximum deviation (example max_deviation = 3) ([0](average-3),[1](average-2),[2](average-1),[3](average),[4](average+1),[5](average+2),[6](average+3))
+    println(data.length);
     java.util.Arrays.fill(data, 0);
   }
 
@@ -58,7 +59,8 @@ void paint(int[] d) {
     max = d[i]>max?d[i]:max;
   }
   for (int i = 0; i<d.length; i++) {
-    vertex(i*(width/(d.length-1)), height-d[i]*(height/max));
+    vertex(i*(width/(d.length-1)),
+    height-d[i]*(height/max));
   }
   vertex(width, height);
   endShape();
