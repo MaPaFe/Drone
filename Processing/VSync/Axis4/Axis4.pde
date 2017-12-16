@@ -9,7 +9,7 @@ ValueSender sender;
 void setup() {
   size(600, 600);
 
-  Serial serial = new Serial(this, "/dev/cu.usbmodem1421", 19200);
+  Serial serial = new Serial(this, "/dev/cu.usbmodem1411", 19200);
   sender = new ValueSender(this, serial);
   sender.observe("upDown");
   sender.observe("leftRight");

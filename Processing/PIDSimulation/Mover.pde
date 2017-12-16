@@ -11,8 +11,8 @@ class Mover {
     acc = new PVector(0, 0);
     mass = 1;
 
-    xPid = new PID(0.01, 0, 3);
-    yPid = new PID(0.01, 0, 3);
+    xPid = new PID(1, 0, 0);
+    yPid = new PID(0, 0, 0);
   }
 
   void applyForce(PVector force) {

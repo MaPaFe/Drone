@@ -1,10 +1,12 @@
 class Drone {
-  final int MIN_BOX_THRESHOLD = 20;
+  final int MIN_BOX_THRESHOLD = 50;
   final int MAX_BOX_THRESHOLD = 100;
   final int BOX_INCREMENT = 10;
+  final int MAX_TIME_LOST = 2000;
 
   PVector currentDronePos, previousDronePos, predictionObserved;
   boolean foundAtBeginning;
+  float lastSeen;
 
   Knct kinect;
   PID[] pids;
@@ -16,19 +18,27 @@ class Drone {
 
     foundAtBeginning = false;
 
+    lastSeen = millis();
+
     kinect = new Knct(pa);
 
     pids = new PID[3];
     //pids[0] = new PID(-0.85, 0.5, 0); // throttle
     //pids[1] = new PID(0.7, 0, 0);    // alante atras
     //pids[2] = new PID(0.7, 0, 0);    // izq der
-    pids[0] = new PID(pidXP, pidXI, pidXD); // throttle
-    pids[0].setMinMaxOut(50, 127);
-    pids[1] = new PID(pidYP, pidYI, pidYD);    // alante atras
-    pids[2] = new PID(pidZP, pidZI, pidZD);    // izq der
+    pids[0] = new PID(pidKs[0][0], pidKs[0][1], pidKs[0][2]); // throttle
+    //pids[0].setMinMaxOut(50, 127);
+    pids[1] = new PID(pidKs[1][0], pidKs[1][1], pidKs[1][2]);    // alante atras
+    pids[2] = new PID(pidKs[2][0], pidKs[2][1], pidKs[2][2]);    // izq der
   }
 
   void update(PVector setPoint) {
+    if (GRAPHS) {
+      for (int i = 0; i < history.length; i++) {
+        history[i][frameCount % history[i].length] = 0;
+      }
+    }
+
     if (!foundAtBeginning) {
       currentDronePos = findAtBeginning(FIND_FIRST_THRESHOLD);
 
@@ -39,50 +49,49 @@ class Drone {
         previousDronePos = currentDronePos.copy();
       }
     } else {
-      try {
-        previousDronePos = currentDronePos.copy();
+      previousDronePos = currentDronePos.copy();
 
-        // For future prediction with PID
-        // PVector prediction = PVector.add(predObserved, predIdeal);
-        // prediction.mult(0.5);
+      // For future prediction with PID
+      // PVector prediction = PVector.add(predObserved, predIdeal);
+      // prediction.mult(0.5);
 
-        currentDronePos = searchDrone(predictionObserved);
+      currentDronePos = searchDrone(predictionObserved);
 
-        if (GRAPHS) {        
-          for (int i = 0; i < history.length; i++) {
-            history[i][frameCount % history[i].length] = Knct.realToKinect(currentDronePos).array()[i];
-          }
-        }
-
-        predictionObserved = PVector.add(currentDronePos, PVector.sub(currentDronePos, previousDronePos));
-
-        if (serial.available() > 0) {
-          byte[] vals = new byte[4];
-
-          vals[0] = (byte) pids[0].compute(currentDronePos.y, setPoint.y);
-          vals[1] = (byte) pids[1].compute(currentDronePos.z, setPoint.z);
-          vals[2] = (byte) pids[2].compute(currentDronePos.x, setPoint.x);
-          vals[3] = 0;
-
-          serial.clear();
-          serial.write(vals);
-          printArray(vals);
-        }
-
-        // For visualizing the prediction
-        // println(predictionObserved, currentDronePos, previousDronePos);
-        // line(currentDronePos.x, currentDronePos.y, predictionObserved.x * -100, predictionObserved.y * -100);
-        // noStroke();
-        // fill(0, 0, 255);
-        // ellipse(previousDronePos.x, previousDronePos.y, 8, 8);
-        // fill(0, 255, 0);
-        // ellipse(currentDronePos.x, currentDronePos.y, 8, 8);
-        // fill(255, 0, 0);
-        // ellipse(predictionObserved.x, predictionObserved.y, 8, 8);
-      }
-      catch (NullPointerException e) {
+      if (millis() - lastSeen > MAX_TIME_LOST) {
         foundAtBeginning = false;
       }
+
+      if (GRAPHS) {
+        for (int i = 0; i < history.length; i++) {
+          history[i][frameCount % history[i].length] = Knct.realToKinect(currentDronePos).array()[i];
+        }
+      }
+
+      predictionObserved = PVector.add(currentDronePos, PVector.sub(currentDronePos, previousDronePos));
+
+      if (serial.available() > 0) {
+        byte[] vals = new byte[4];
+
+        vals[0] = (byte) map(pids[0].compute(currentDronePos.y, setPoint.y), -127, 127, -90, 127);
+        vals[1] = (byte) pids[1].compute(currentDronePos.z, setPoint.z);
+        vals[2] = (byte) pids[2].compute(currentDronePos.x, setPoint.x);
+        vals[3] = 0;
+
+        serial.clear();
+        serial.write(vals) ;
+        printArray(vals);
+      }
+
+      // For visualizing the prediction
+      // println(predictionObserved, currentDronePos, previousDronePos);
+      // line(currentDronePos.x, currentDronePos.y, predictionObserved.x * -100, predictionObserved.y * -100);
+      // noStroke();
+      // fill(0, 0, 255);
+      // ellipse(previousDronePos.x, previousDronePos.y, 8, 8);
+      // fill(0, 255, 0);
+      // ellipse(currentDronePos.x, currentDronePos.y, 8, 8);
+      // fill(255, 0, 0);
+      // ellipse(predictionObserved.x, predictionObserved.y, 8, 8);
     }
   }
 
@@ -106,7 +115,7 @@ class Drone {
         blobsImage.pixels[i] = color(255);
       }
     }
-    if (counter != 0) averageDepth /= counter;
+    if (counter > 0) averageDepth /= counter;
     else averageDepth = FIND_FIRST_THRESHOLD;
 
     blobsImage.updatePixels();
@@ -172,7 +181,7 @@ class Drone {
           }
         }
       }
-      if (counter != 0) averageDepth /= counter;
+      if (counter > 0) averageDepth /= counter;
       else averageDepth = FIND_FIRST_THRESHOLD;
 
       blobsImage.updatePixels();
@@ -187,9 +196,12 @@ class Drone {
       if (blobs.getBlobNb() >= 1) {
         Blob b = blobs.getBlob(0);
 
+        lastSeen = millis();
         return Knct.kinectToReal(new PVector(b.x * Knct.width, b.y * Knct.height, averageDepth));
       }
+
+      println(threshold);
     }
-    return null;
+    return currentDronePos;
   }
 }

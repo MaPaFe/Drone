@@ -1,13 +1,16 @@
 import processing.serial.*;
 
-final int FIND_FIRST_THRESHOLD = 1400;
+final int FIND_FIRST_THRESHOLD = 1500;
 final boolean GRAPHS = true;
 
 Drone drone;
 Serial serial;
 
 float[][] history;
-float pidXP = -200, pidXI = 0, pidXD = 75, pidYP = 30, pidYI = 0, pidYD = 0, pidZP = 30, pidZI = 0, pidZD = 0;
+
+float[][] pidKs = {{-15, 0, 0},
+/*             */  {0.5, 0, 0},
+/*             */  {-1, 0, 0}};
 
 void setup() {
   //Unncomment the next line if GRAPHS == true
@@ -25,7 +28,7 @@ void draw() {
   background(0);
   surface.setTitle(getClass().getName() + " [size " + width + "/" +height + "] [frame " + frameCount + "] [frameRate " +frameRate + "]");
 
-  drone.update(new PVector(0, 0, FIND_FIRST_THRESHOLD));
+  drone.update(new PVector(0, 0, 1400));
 
   //drone.foundAtBeginning = false;
 
@@ -42,7 +45,7 @@ void draw() {
       stroke(j==0?255:0, j==1?255:0, j==2?255:0);
       beginShape();
       for (int i = 0; i < history[j].length; i++) {
-        vertex(Knct.width + i, map(history[j][i], mapMin[j], mapMax[j], 0, height));
+        vertex(Knct.width + i, map(history[j][(frameCount + history[j].length - i) % history[j].length], mapMin[j], mapMax[j], 0, height));
       }
       endShape();
     }
@@ -50,76 +53,76 @@ void draw() {
 }
 
 void keyPressed() {
-  float pidIncrement = 5;
+  float pidInc = 0.5;
 
   switch (key) {
   case ' ':
     drone.foundAtBeginning = false;
     break;
   case 'Q':
-    pidXP += pidIncrement;
+    pidKs[0][0] += pidInc;
     break;
   case 'A':
-    pidXP -= pidIncrement;
+    pidKs[0][0] -= pidInc;
     break;
   case 'W':
-    pidXI += pidIncrement;
+    pidKs[0][1] += pidInc;
     break;
   case 'S':
-    pidXI -= pidIncrement;
+    pidKs[0][1] -= pidInc;
     break;
   case 'E':
-    pidXD += pidIncrement;
+    pidKs[0][2] += pidInc;
     break;
   case 'D':
-    pidXD -= pidIncrement;
+    pidKs[0][2] -= pidInc;
     break;
   case 'R':
-    pidYP += pidIncrement;
+    pidKs[1][0] += pidInc;
     break;
   case 'F':
-    pidYP -= pidIncrement;
+    pidKs[1][0] -= pidInc;
     break;
   case 'T':
-    pidYI += pidIncrement;
+    pidKs[1][1] += pidInc;
     break;
   case 'G':
-    pidYI -= pidIncrement;
+    pidKs[1][1] -= pidInc;
     break;
   case 'Y':
-    pidYD += pidIncrement;
+    pidKs[1][2] += pidInc;
     break;
-  case 'h':
-    pidYD -= pidIncrement;
+  case 'H':
+    pidKs[1][2] -= pidInc;
     break;
   case 'U':
-    pidZP += pidIncrement;
+    pidKs[2][0] += pidInc;
     break;
   case 'J':
-    pidZP -= pidIncrement;
+    pidKs[2][0] -= pidInc;
     break;
   case 'I':
-    pidZI += pidIncrement;
+    pidKs[2][1] += pidInc;
     break;
   case 'K':
-    pidZI -= pidIncrement;
+    pidKs[2][1] -= pidInc;
     break;
   case 'O':
-    pidZD += pidIncrement;
+    pidKs[2][2] += pidInc;
     break;
   case 'L':
-    pidZD -= pidIncrement;
+    pidKs[2][2] -= pidInc;
     break;
   default:
     println(key);
     break;
   }
 
-  drone.pids[0].setKs(pidXP, pidXI, pidXD);
-  drone.pids[1].setKs(pidYP, pidYI, pidYD);
-  drone.pids[2].setKs(pidZP, pidZI, pidZD);
+  drone.pids[0].setKs(pidKs[0][0], pidKs[0][1], pidKs[0][2]);
+  drone.pids[1].setKs(pidKs[1][0], pidKs[1][1], pidKs[1][2]);
+  drone.pids[2].setKs(pidKs[2][0], pidKs[2][1], pidKs[2][2]);
 
-  println(pidXP, pidYP, pidZP);
-  println(pidXI, pidYI, pidZI);
-  println(pidXD, pidYD, pidZD);
+  println(pidKs[0][0], pidKs[1][0], pidKs[2][0]);
+  println(pidKs[0][1], pidKs[1][1], pidKs[2][1]);
+  println(pidKs[0][2], pidKs[1][2], pidKs[2][2]);
 }
