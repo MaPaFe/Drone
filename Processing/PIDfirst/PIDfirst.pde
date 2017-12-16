@@ -17,7 +17,7 @@ void setup() {
 
   drone = new Drone(this);
   serial = new Serial(this, Serial.list()[1]);
-
+  //if you call serial.write(new byte[]{0,0,0,0}); there is no need to reflash the arduino every time the processing scetch is  executed as it begins the handshake
   if (GRAPHS) history = new float[3][width - Knct.width];
 }
 
