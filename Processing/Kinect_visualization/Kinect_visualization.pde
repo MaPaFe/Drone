@@ -5,10 +5,12 @@ import peasy.org.apache.commons.math.geometry.*;
 int zmax=4500;
 Knct kinect;
 PeasyCam cam;
-final int SCALE_DEFINED_WIDTH_Z_SIZE = 400;
-float w = tan(70/2)*zmax*2/4500*SCALE_DEFINED_WIDTH_Z_SIZE;
-float h = tan(70/2)*zmax*2/4500*SCALE_DEFINED_WIDTH_Z_SIZE;
-int res = 2;
+float FAKTOR=1;
+float inc = .2;
+float DEFINED_WIDTH_Z_SIZE = 6000/FAKTOR;
+int minRes = 3;
+int maxRes = 1;
+int res = 3;
 int[] depth;
 
 void setup() {
@@ -17,36 +19,30 @@ void setup() {
   kinect = new Knct(this);
   cam = new PeasyCam(this, 100);
   cam.setMinimumDistance(0);
-  cam.setMaximumDistance(5000);
+  cam.setMaximumDistance(100000);
 }
-
 void draw() {
-  translate(0,0,200);
+  DEFINED_WIDTH_Z_SIZE = 6000/FAKTOR;
+  //translate(0,0,200);
   rotateX(PI);
   rotateZ(PI);
   background(0);
   //translate(width/2,height/2);
-  stroke(360, 0, 100);
-  knct_box(w, -h, SCALE_DEFINED_WIDTH_Z_SIZE);
+  stroke(360, 360, 360);
+  knct_box(DEFINED_WIDTH_Z_SIZE);
   //int med=0;
   //int count=0;
-  res = keyPressed?1:2;
-  strokeWeight(res);
-  //res = keyPressed?1:4;
-  if(res==1) strokeWeight(1);
-  else strokeWeight(4);;
-  depth = kinect.getDepth();//if(frameCount<194)
-  for (int x=0; x<kinect.width; x+=res) {
-    for (int y=0; y<kinect.height; y+=res) {
-      try{
-      int index=y*kinect.width+x;
-      float[] p = KinectToReal(x,y,depth[index]);
-               // p = KinectToReal(pp[0],pp[1],pp[2]);
-               // med+=p[2];
-               // count++;
-        //printArray(p);
-        //point(KinectToReal(x,y,depth[index]),SCALE_DEFINED_WIDTH_Z_SIZE);
-        point(p, SCALE_DEFINED_WIDTH_Z_SIZE);
+  //
+  if (res==1) strokeWeight(maxRes+1);
+  else strokeWeight(minRes);
+  noFill();
+  depth = kinect.getDepth();
+  for (int x=0; x<Knct.width; x+=res) {
+    for (int y=0; y<Knct.height; y+=res) {
+      try {
+        int index=y*Knct.width+x;
+        float[] p = KinectToReal(x, y, depth[index]/FAKTOR);
+        point(p);
       }
       catch(IndexOutOfBoundsException e) {
       }
@@ -64,11 +60,11 @@ void draw() {
 float[] KinectToReal(float px, float py, float pz) {
   float focalx = 364.18;
   float focaly = 364.33;
-  float principelx = kinect.width/2;
-  float principely = kinect.height/2;
+  float principelx = Knct.width/2;
+  float principely = Knct.height/2;
   float x = (px-principelx)*pz/focalx;
   float y = (py-principely)*pz/focaly;
-   
+
   float[] realPoint = {x, y, pz};
   //float[] realPoint = {theta*1000,phi*1000,radius};
   return realPoint;
@@ -76,32 +72,45 @@ float[] KinectToReal(float px, float py, float pz) {
 float[] RealToKinect(float px, float py, float pz) {
   float focalx = 364.33;
   float focaly = 364.33;
-  float principelx = kinect.width/2;
-  float principely = kinect.height/2;
+  float principelx = Knct.width/2;
+  float principely = Knct.height/2;
   float x = (px*focalx/pz)+principelx;
   float y = (py*focaly/pz)+principely;
-   
+
   float[] realPoint = {x, y, pz};
   //float[] realPoint = {theta*1000,phi*1000,radius};
   return realPoint;
 }
-void knct_box(float d, float w, int h) {
+void keyPressed() {
+  res = key==' '?maxRes:minRes;
+  switch(keyCode) {
+  case UP:   
+    FAKTOR+=inc;
+    println(FAKTOR);
+    break;
+  case DOWN: 
+    FAKTOR = FAKTOR!=1?FAKTOR-inc:1;
+    println(FAKTOR);
+    break;
+  }
+}
+void knct_box(float z) {
   pushMatrix();
-  rotateX(HALF_PI);
-  line(0, 0, 0, w, h, d);
-  line(0, 0, 0, w, h, -d);
+  PVector p = new PVector(0, 0, 0);
+  PVector p2 = new PVector(tan(radians(70/2))*z, tan(radians(60/2))*z, z);
+  //println(radians(70));
+  line(p.x, p.y, p.z, p2.x, p2.y, p2.z);
+  line(p.x, p.y, p.z, -p2.x, p2.y, p2.z);
+  line(p.x, p.y, p.z, -p2.x, -p2.y, p2.z);
+  line(p.x, p.y, p.z, p2.x, -p2.y, p2.z);
 
-  line(0, 0, 0, -w, h, d);
-  line(0, 0, 0, -w, h, -d);
-
-  line(w, h, d, w, h, -d);
-  line(w, h, -d, -w, h, -d);
-  line(-w, h, d, -w, h, -d);
-  line(-w, h, d, w, h, d);
+  line(p2.x, p2.y, p2.z, -p2.x, p2.y, p2.z);
+  line( -p2.x, p2.y, p2.z, -p2.x, -p2.y, p2.z);
+  line(-p2.x, -p2.y, p2.z, p2.x, -p2.y, p2.z);
+  line(p2.x, -p2.y, p2.z, p2.x, p2.y, p2.z);
   popMatrix();
 }
-void point(float[] p, float s) {
-  stroke(map(p[2], 0, 4500, 0, 360), 360, 360);
-  s = s/4500;
-  point(p[0]*s, p[1]*s, p[2]*s);
+void point(float[] p) {
+  stroke(map(p[2], 0, DEFINED_WIDTH_Z_SIZE, 0, 360), 360, 360);
+  point(p[0], p[1], p[2]);
 }
