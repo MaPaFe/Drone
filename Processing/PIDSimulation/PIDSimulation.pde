@@ -6,14 +6,15 @@ Mover m;
 
 void setup() {
   size(640, 360);
+  //frameRate(4);
   m = new Mover();
 }
 
 void draw() {
   background(255);
 
-  PVector wind = new PVector(noise(frameCount/100f), 0);
-  PVector gravity = new PVector(0, 0.1);
+  //PVector wind = new PVector(noise(frameCount/100f), 0);
+  //PVector gravity = new PVector(0, 0.1);
   //m.applyForce(wind);
   //m.applyForce(gravity);
 
