@@ -33,7 +33,7 @@ class PID {
 
     float error = setPoint - input;
 
-    integral += error * kI;
+    integral += error * deltaTime;
     //integral = constrain(integral, ?, ?);
 
     float output = error * kP + integral * kI + ((error - prevError) / deltaTime) * kD;
