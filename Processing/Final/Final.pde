@@ -9,8 +9,8 @@ Serial serial;
 float[][] history;
 
 // Define the K values for the PIDs
-float[][] pidKs = {{-8, 0, 0},
-/*             */  {7, -1.5, 0},
+float[][] pidKs = {{-7, -1, -1},
+/*             */  {5, -1, 0},
 /*             */  {-1, 0, 0}};
 
 void setup() {
