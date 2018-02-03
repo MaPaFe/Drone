@@ -29,9 +29,9 @@ class PID {
 
     float error = setPoint - input;
 
-    integral += error * kI;
+    integral += error * deltaTime;
 
-    float output = error * kP + integral + kI + ((error - prevError) / deltaTime) * kD;
+    float output = error * kP + integral * kI + ((error - prevError) / deltaTime) * kD;
 
     prevError = error;
     lastTime = now;
