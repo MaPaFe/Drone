@@ -21,7 +21,6 @@ void setup() {
   cam.setMinimumDistance(0);
   cam.setMaximumDistance(100000);
 }
-
 void draw() {
   DEFINED_WIDTH_Z_SIZE = 6000/FAKTOR;
   //translate(0,0,200);
