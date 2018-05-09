@@ -79,7 +79,7 @@ class Drone {
       if (GRAPHS) {
         // Update the position in all axis
         for (int i = 0; i < history.length; i++) {
-          history[i][frameCount % history[i].length] = Knct.realToKinect(currentDronePos).array()[i];
+          history[i][frameCount % history[i].length] = currentDronePos.array()[i] / 4 + width / 8;
         }
       }
 
@@ -92,10 +92,15 @@ class Drone {
         byte[] vals = new byte[4];
 
         // Fill the array with the calculated PID values
-        vals[0] = (byte) map(pids[0].compute(currentDronePos.y, setPoint.y), -127, 127, -90, 127);
+        vals[0] = (byte) map(pids[0].compute(currentDronePos.y, setPoint.y), -127, 127, -127, 70);
         vals[1] = (byte) pids[1].compute(currentDronePos.z, setPoint.z);
         vals[2] = (byte) pids[2].compute(currentDronePos.x, setPoint.x);
         vals[3] = 0;
+
+        fill(51);
+        rect(900, 300, 50, vals[2]);
+        rect(850, 300, 50, vals[0]);
+        rect(800, 300, 50, vals[1]);
 
         serial.clear();
         serial.write(vals);

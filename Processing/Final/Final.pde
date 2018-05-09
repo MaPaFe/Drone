@@ -9,9 +9,9 @@ Serial serial;
 float[][] history;
 
 // Define the K values for the PIDs
-float[][] pidKs = {{-7, -1, -1},
-/*             */  {5, -1, 0},
-/*             */  {-1, 0, 0}};
+float[][] pidKs = {{-0.1, 0, -0.3},
+/*             */  {1, 0, 0.3},
+/*             */  {-0.1, 0, -0.3}};
 
 void setup() {
   //Unncomment the next line if GRAPHS == true
@@ -21,9 +21,9 @@ void setup() {
 
   drone = new Drone(this);
   // Create the serial object on the second serial port
-  // becouse that's usually the correct one
-  serial = new Serial(this, Serial.list()[1]);
+  // because that's usually the correct one
   printArray(Serial.list());
+  serial = new Serial(this, Serial.list()[1]);
 
   if (GRAPHS) history = new float[3][width - Knct.width];
 }
@@ -32,8 +32,6 @@ void draw() {
   background(0);
   // Put information on window title
   surface.setTitle(getClass().getName() + " [size " + width + "/" +height + "] [frame " + frameCount + "] [frameRate " +frameRate + "]");
-
-  drone.update(new PVector(0, 0, FIND_FIRST_THRESHOLD - 100));
 
   //drone.foundAtBeginning = false;
 
@@ -60,74 +58,86 @@ void draw() {
       endShape();
     }
   }
+
+  drone.update(new PVector(0, -30, FIND_FIRST_THRESHOLD));
 }
 
-void keyPressed() {
-  float pidInc = 0.5;
 
+float pidInc = 0.05;
+void keyPressed() {
   switch (key) {
-    case ' ':
+  case ' ':
     // Reset box-tracking
     drone.foundAtBeginning = false;
     break;
 
-  // Change Ks
-    case 'Q':
+    // Change Ks
+  case 'Q':
     pidKs[0][0] += pidInc;
     break;
-    case 'A':
+  case 'A':
     pidKs[0][0] -= pidInc;
     break;
-    case 'W':
+  case 'W':
     pidKs[0][1] += pidInc;
     break;
-    case 'S':
+  case 'S':
     pidKs[0][1] -= pidInc;
     break;
-    case 'E':
+  case 'E':
     pidKs[0][2] += pidInc;
     break;
-    case 'D':
+  case 'D':
     pidKs[0][2] -= pidInc;
     break;
-    case 'R':
+  case 'R':
     pidKs[1][0] += pidInc;
     break;
-    case 'F':
+  case 'F':
     pidKs[1][0] -= pidInc;
     break;
-    case 'T':
+  case 'T':
     pidKs[1][1] += pidInc;
     break;
-    case 'G':
+  case 'G':
     pidKs[1][1] -= pidInc;
     break;
-    case 'Y':
+  case 'Y':
     pidKs[1][2] += pidInc;
     break;
-    case 'H':
+  case 'H':
     pidKs[1][2] -= pidInc;
     break;
-    case 'U':
+  case 'U':
     pidKs[2][0] += pidInc;
     break;
-    case 'J':
+  case 'J':
     pidKs[2][0] -= pidInc;
     break;
-    case 'I':
+  case 'I':
     pidKs[2][1] += pidInc;
     break;
-    case 'K':
+  case 'K':
     pidKs[2][1] -= pidInc;
     break;
-    case 'O':
+  case 'O':
     pidKs[2][2] += pidInc;
     break;
-    case 'L':
+  case 'L':
     pidKs[2][2] -= pidInc;
     break;
-    default:
+  default:
     println(key);
+    switch(keyCode) {
+    case UP:
+      pidInc += 0.01;
+      println(pidInc);
+      break;
+    case DOWN:
+      pidInc -= 0.01;
+      println(pidInc);
+      break;
+    }
     break;
   }
 
@@ -138,5 +148,5 @@ void keyPressed() {
 
   println(pidKs[0][0], pidKs[1][0], pidKs[2][0]);
   println(pidKs[0][1], pidKs[1][1], pidKs[2][1]);
-  println(pidKs[0][2], pidKs[1][2], pidKs[2][2]);   
+  println(pidKs[0][2], pidKs[1][2], pidKs[2][2]);
 }
