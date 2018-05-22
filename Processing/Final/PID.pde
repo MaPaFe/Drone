@@ -6,7 +6,7 @@ class PID {
 
   PID(float kP_, float kI_, float kD_) {
     setKs(kP_, kI_, kD_);
-    
+
     minOutput = -127;
     maxOutput = 127;
 

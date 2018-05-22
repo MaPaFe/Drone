@@ -27,25 +27,24 @@ class Drone {
     //pids[0] = new PID(-0.85, 0.5, 0); // throttle
     //pids[1] = new PID(0.7, 0, 0);    // alante atras
     //pids[2] = new PID(0.7, 0, 0);    // izq der
-    pids[0] = new PID(pidKs[0][0], pidKs[0][1], pidKs[0][2]); // throttle
+    pids[0] = new PID(pidKs[0][0], pidKs[0][1], pidKs[0][2]); // throttle     y
     //pids[0].setMinMaxOut(50, 127);
-    pids[1] = new PID(pidKs[1][0], pidKs[1][1], pidKs[1][2]);    // alante atras
-    pids[2] = new PID(pidKs[2][0], pidKs[2][1], pidKs[2][2]);    // izq der
+    pids[1] = new PID(pidKs[1][0], pidKs[1][1], pidKs[1][2]); // alante atras z
+    pids[2] = new PID(pidKs[2][0], pidKs[2][1], pidKs[2][2]); // izq der      x
   }
 
   void update(PVector setPoint) {
     if (GRAPHS) {
       // Set the current frame on all axis
       for (int i = 0; i < history.length; i++) {
-        history[i][frameCount % history[i].length] = 0;
+        history[i][graphIndex % history[i].length] = 0;
       }
     }
-
     // If the drone is not found (not box-tracking)
     if (!foundAtBeginning) {
       // Try to find it with depth-threshold
       currentDronePos = findAtBeginning(FIND_FIRST_THRESHOLD);
-      
+
       pids[0].integral = 0;
       pids[1].integral = 0;
       pids[2].integral = 0;
@@ -58,10 +57,17 @@ class Drone {
         predictionObserved = currentDronePos.copy();
         previousDronePos = currentDronePos.copy();
       }
+
+      if (!graphStopped) {
+        graphStopped = true;
+        graphIndex+=20;
+      }
     }
     // If it's already in box-tracking
     else {
       // Update the soon to be previous position
+      //if (currentDronePos != null) break BREAK; // skip if null or something idk lol
+
       previousDronePos = currentDronePos.copy();
 
       // For future prediction with PID
@@ -78,8 +84,8 @@ class Drone {
 
       if (GRAPHS) {
         // Update the position in all axis
-        for (int i = 0; i < history.length; i++) {
-          history[i][frameCount % history[i].length] = currentDronePos.array()[i] / 4 + width / 8;
+        for (int i = 0; i < 3; i++) {
+          history[i][graphIndex % history[i].length] = currentDronePos.array()[i] / 4 + width / 8;
         }
       }
 
@@ -92,15 +98,21 @@ class Drone {
         byte[] vals = new byte[4];
 
         // Fill the array with the calculated PID values
-        vals[0] = (byte) map(pids[0].compute(currentDronePos.y, setPoint.y), -127, 127, -127, 70);
-        vals[1] = (byte) pids[1].compute(currentDronePos.z, setPoint.z);
-        vals[2] = (byte) pids[2].compute(currentDronePos.x, setPoint.x);
+        vals[0] = (byte) map(pids[0].compute(currentDronePos.y, setPoint.y), -127, 127, -127, 70); // y
+        vals[1] = (byte) pids[1].compute(currentDronePos.z, setPoint.z);                           // z
+        vals[2] = (byte) pids[2].compute(currentDronePos.x, setPoint.x);                           // x
         vals[3] = 0;
 
+        for (int i = 0; i < 3; i++) {
+          history[i+3][graphIndex % history[i+3].length] = vals[i];
+        }
+        graphIndex++;
+        graphStopped = false;
+
         fill(51);
-        rect(900, 300, 50, vals[2]);
-        rect(850, 300, 50, vals[0]);
-        rect(800, 300, 50, vals[1]);
+        rect(900, 300, 50, vals[2]); // x
+        rect(850, 300, 50, vals[0]); // y
+        rect(800, 300, 50, vals[1]); // z
 
         serial.clear();
         serial.write(vals);
@@ -184,16 +196,16 @@ class Drone {
     for (int threshold = MIN_BOX_THRESHOLD; threshold < MAX_BOX_THRESHOLD; threshold += BOX_INCREMENT) {
       // Define the minimum point of the box (one corner)
       PVector boxMin = new PVector(
-        max(prediction.x - threshold, 0),
-        max(prediction.y - threshold, 0),
-        max(prediction.z - threshold, 0)
-        );
+                                   max(prediction.x - threshold, 0),
+                                   max(prediction.y - threshold, 0),
+                                   max(prediction.z - threshold, 0)
+                                   );
       // The opposite corner
       PVector boxMax = new PVector(
-        min(prediction.x + threshold, Knct.width),
-        min(prediction.y + threshold, Knct.height),
-        min(prediction.z + threshold, 7000)
-        );
+                                   min(prediction.x + threshold, Knct.width),
+                                   min(prediction.y + threshold, Knct.height),
+                                   min(prediction.z + threshold, 7000)
+                                   );
 
       //PVector boxMin = new PVector(max(prediction.x - threshold, 0), max(prediction.y - threshold, 0), FIND_FIRST_THRESHOLD - threshold);
       //PVector boxMax = new PVector(min(prediction.x + threshold, Knct.width), min(prediction.y + threshold, Knct.height), FIND_FIRST_THRESHOLD + threshold);
@@ -205,7 +217,9 @@ class Drone {
 
       blobsImage.loadPixels();
       // Clear the blobs image
-      for (int i = 0; i < blobsImage.pixels.length; i++) blobsImage.pixels[i] = color(255);
+      for (int i = 0; i < blobsImage.pixels.length; i++) {
+        blobsImage.pixels[i] = color(255);
+      }
 
       int averageDepth = 0, counter = 0;
       // For all pixels inside the box
@@ -223,6 +237,7 @@ class Drone {
           }
         }
       }
+
       if (counter > 0) averageDepth /= counter;
       else averageDepth = FIND_FIRST_THRESHOLD;
 
